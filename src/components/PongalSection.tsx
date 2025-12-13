@@ -83,6 +83,7 @@ export function PongalSection() {
                     src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&q=80"
                     alt="Pongal Celebration"
                     fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-maroon/80 via-transparent to-transparent" />
