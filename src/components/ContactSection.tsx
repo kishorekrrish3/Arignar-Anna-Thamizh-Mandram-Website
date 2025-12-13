@@ -37,10 +37,34 @@ export function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    setFormData({ name: "", email: "", phone: "", year: "", message: "" });
+    
+    try {
+      const response = await fetch('/api/registrations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || null,
+          reason: formData.year || 'Not specified',
+          message: formData.message || null,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit registration');
+      }
+
+      setIsSubmitted(true);
+      setFormData({ name: "", email: "", phone: "", year: "", message: "" });
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Failed to submit registration. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
