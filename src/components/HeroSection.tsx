@@ -8,7 +8,7 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-beige">
       <div className="absolute inset-0 cultural-pattern opacity-30" />
-      
+
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-maroon/5 rounded-full blur-3xl" />
 
@@ -46,8 +46,8 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold text-charcoal mb-6 leading-[1.1]"
         >
-          <span className="block">10 Years of</span>
-          <span className="block text-maroon">Tamil Heritage</span>
+          <span className="block font-montserrat">ARIGNAR ANNA</span>
+          <span className="block font-montserrat text-maroon">THAMIZH MANDRAM</span>
         </motion.h1>
 
         <motion.p
@@ -65,7 +65,7 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="text-lg md:text-xl text-charcoal-light max-w-2xl mx-auto mb-4"
         >
-          Arignar Anna Thamizh Mandram, VIT Chennai
+          Vellore Institute of Technology, Chennai
         </motion.p>
 
         <motion.p
@@ -94,8 +94,7 @@ export function HeroSection() {
             href="#pongal"
             className="group flex items-center gap-2 px-8 py-4 bg-maroon text-beige font-medium rounded-full hover:bg-maroon-light transition-all duration-300"
           >
-            <span className="font-tamil">பொங்கல் திருவிழா</span>
-            <span>2026</span>
+            <span className="font-tamil">பொங்கல் திருவிழா 2026</span>
           </Link>
         </motion.div>
 
@@ -106,9 +105,9 @@ export function HeroSection() {
           className="mt-20 grid grid-cols-3 gap-8 max-w-lg mx-auto"
         >
           {[
-            { value: "10+", label: "Years" },
-            { value: "50+", label: "Events" },
-            { value: "1000+", label: "Members" },
+            { value: "13+", label: "Years" },
+            { value: "300+", label: "Events" },
+            { value: "5000+", label: "Members" },
           ].map((stat, index) => (
             <motion.div
               key={stat.label}

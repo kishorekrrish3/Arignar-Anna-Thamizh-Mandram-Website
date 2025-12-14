@@ -1,64 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Section, SectionHeader } from "./Section";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
-
-const galleryImages = [
-  {
-    src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80",
-    alt: "Cultural Performance",
-    category: "Performances",
-    span: "col-span-2 row-span-2",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&q=80",
-    alt: "Traditional Dance",
-    category: "Dance",
-    span: "col-span-1 row-span-1",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80",
-    alt: "Event Celebration",
-    category: "Events",
-    span: "col-span-1 row-span-1",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=800&q=80",
-    alt: "Team Gathering",
-    category: "Community",
-    span: "col-span-1 row-span-1",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&q=80",
-    alt: "Art Exhibition",
-    category: "Art",
-    span: "col-span-1 row-span-2",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800&q=80",
-    alt: "Stage Performance",
-    category: "Performances",
-    span: "col-span-1 row-span-1",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800&q=80",
-    alt: "Festival Lights",
-    category: "Events",
-    span: "col-span-1 row-span-1",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&q=80",
-    alt: "Cultural Event",
-    category: "Events",
-    span: "col-span-2 row-span-1",
-  },
-];
+import { X, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import { getGalleryImages } from "@/lib/api/gallery";
+import type { GalleryImage } from "@/lib/supabase";
+import { LoadingSkeleton } from "./ui/LoadingSkeleton";
+import { EmptyState } from "./ui/EmptyState";
 
 export function GallerySection() {
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+
+  useEffect(() => {
+    async function fetchGalleryImages() {
+      setIsLoading(true);
+      try {
+        const data = await getGalleryImages();
+        setGalleryImages(data);
+      } catch (error) {
+        console.error("Error fetching gallery images:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchGalleryImages();
+  }, []);
 
   const handlePrev = () => {
     if (selectedImage !== null) {
@@ -84,36 +55,48 @@ export function GallerySection() {
           light
         />
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
-          {galleryImages.map((image, index) => (
-            <motion.div
-              key={image.alt}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className={`relative group cursor-pointer overflow-hidden rounded-xl ${image.span}`}
-              onClick={() => setSelectedImage(index)}
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="px-3 py-1 bg-gold/90 text-charcoal text-xs font-medium rounded-full">
-                  {image.category}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {isLoading ? (
+          <LoadingSkeleton count={8} className="grid grid-cols-2 md:grid-cols-4 gap-4" />
+        ) : galleryImages.length === 0 ? (
+          <EmptyState
+            icon={ImageIcon}
+            title="No Gallery Images"
+            description="Check back soon for photos from our events and celebrations!"
+          />
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
+            {galleryImages.map((image, index) => (
+              <motion.div
+                key={image.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
+                className="relative group cursor-pointer overflow-hidden rounded-xl"
+                onClick={() => setSelectedImage(index)}
+              >
+                <Image
+                  src={image.image_url}
+                  alt={image.title || "Gallery image"}
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                {image.category && (
+                  <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="px-3 py-1 bg-gold/90 text-charcoal text-xs font-medium rounded-full">
+                      {image.category}
+                    </span>
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        )}
 
         <AnimatePresence>
-          {selectedImage !== null && (
+          {selectedImage !== null && galleryImages[selectedImage] && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -162,8 +145,8 @@ export function GallerySection() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <Image
-                  src={galleryImages[selectedImage].src}
-                  alt={galleryImages[selectedImage].alt}
+                  src={galleryImages[selectedImage].image_url}
+                  alt={galleryImages[selectedImage].title || "Gallery image"}
                   fill
                   sizes="100vw"
                   className="object-contain"

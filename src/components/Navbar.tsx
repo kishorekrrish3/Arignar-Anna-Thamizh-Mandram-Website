@@ -32,11 +32,10 @@ export function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? "bg-beige/95 backdrop-blur-md shadow-sm"
-            : "bg-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+          ? "bg-beige/95 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
+          }`}
       >
         <nav className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between">
@@ -76,8 +75,7 @@ export function Navbar() {
                 href="#pongal"
                 className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-maroon text-beige text-sm font-medium rounded-full hover:bg-maroon-light transition-colors duration-300"
               >
-                <span className="font-tamil">பொங்கல்</span>
-                <span>&apos;26</span>
+                <span className="font-tamil">பொங்கல் &apos;26</span>
               </Link>
 
               <button

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -9,6 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-dm-sans);
   --font-serif: var(--font-cormorant);
+  --font-montserrat: var(--font-montserrat);
   --font-tamil: var(--font-noto-tamil);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -44,7 +45,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  
+
   --color-maroon: var(--maroon);
   --color-maroon-light: var(--maroon-light);
   --color-gold: var(--gold);
@@ -60,8 +61,9 @@
 :root {
   --font-dm-sans: "DM Sans", system-ui, sans-serif;
   --font-cormorant: "Cormorant Garamond", Georgia, serif;
+  --font-montserrat: "Montserrat", sans-serif;
   --font-noto-tamil: "Noto Sans Tamil", sans-serif;
-  
+
   --radius: 0.625rem;
   --background: #FAF8F5;
   --foreground: #1C1917;
@@ -94,7 +96,7 @@
   --sidebar-accent-foreground: #1C1917;
   --sidebar-border: #E7E5E4;
   --sidebar-ring: #6B1C23;
-  
+
   --maroon: #6B1C23;
   --maroon-light: #8B2C35;
   --gold: #C4A052;
@@ -139,7 +141,7 @@
   --sidebar-accent-foreground: #FAF8F5;
   --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-ring: #C4A052;
-  
+
   --maroon: #8B2C35;
   --maroon-light: #A83D48;
   --gold: #D4B87A;
@@ -154,19 +156,29 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-dm-sans);
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-cormorant);
   }
+
   .font-tamil {
     font-family: var(--font-noto-tamil);
   }
+
   .font-serif {
     font-family: var(--font-cormorant);
   }
+
   .font-sans {
     font-family: var(--font-dm-sans);
   }
@@ -176,11 +188,27 @@
   .text-balance {
     text-wrap: balance;
   }
+
   .cultural-pattern {
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30L30 0z' fill='none' stroke='%23C4A052' stroke-width='0.5' opacity='0.1'/%3E%3C/svg%3E");
   }
+
   .cultural-border {
     border-image: linear-gradient(90deg, transparent, var(--gold), transparent) 1;
+  }
+
+  .shimmer {
+    animation: shimmer 2s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
   }
 }
 

@@ -1,9 +1,14 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
 import { Section, SectionHeader, AnimatedCard } from "./Section";
 import { Trophy, Award, Star, Users, Calendar, Mic } from "lucide-react";
+import { getAchievements } from "@/lib/api/achievements";
+import type { Achievement } from "@/lib/supabase";
+import { CardSkeleton } from "./ui/LoadingSkeleton";
+import { EmptyState } from "./ui/EmptyState";
 
 const stats = [
   { value: 10, suffix: "+", label: "Years of Legacy", icon: Calendar },
@@ -12,32 +17,13 @@ const stats = [
   { value: 25, suffix: "+", label: "Awards Won", icon: Trophy },
 ];
 
-const milestones = [
-  {
-    year: "2017",
-    title: "Best Cultural Club Award",
-    description: "Recognized as the best cultural organization at VIT Chennai",
-    icon: Trophy,
-  },
-  {
-    year: "2019",
-    title: "University Excellence Award",
-    description: "Awarded for outstanding contribution to campus culture",
-    icon: Award,
-  },
-  {
-    year: "2022",
-    title: "Digital Innovation Award",
-    description: "Recognized for successful virtual cultural events during pandemic",
-    icon: Star,
-  },
-  {
-    year: "2024",
-    title: "Inter-University Champions",
-    description: "Won the state-level Tamil literary competition",
-    icon: Mic,
-  },
-];
+// Icon mapping for achievements
+const iconMap: Record<string, typeof Trophy> = {
+  trophy: Trophy,
+  award: Award,
+  star: Star,
+  mic: Mic,
+};
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
   const [count, setCount] = useState(0);
@@ -71,6 +57,32 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
 }
 
 export function AchievementsSection() {
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchAchievements() {
+      setIsLoading(true);
+      try {
+        const data = await getAchievements();
+        setAchievements(data);
+      } catch (error) {
+        console.error("Error fetching achievements:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchAchievements();
+  }, []);
+
+  // Get icon component from category or default to Trophy
+  const getIcon = (category: string | null) => {
+    if (!category) return Trophy;
+    const key = category.toLowerCase();
+    return iconMap[key] || Trophy;
+  };
+
   return (
     <Section id="achievements">
       <SectionHeader
@@ -101,34 +113,55 @@ export function AchievementsSection() {
       <div className="relative">
         <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-gold/50 to-transparent hidden lg:block" />
 
-        <div className="space-y-8 lg:space-y-0">
-          {milestones.map((milestone, index) => (
-            <motion.div
-              key={milestone.year}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.15 }}
-              className={`relative lg:w-1/2 ${index % 2 === 0 ? "lg:pr-12 lg:text-right" : "lg:pl-12 lg:ml-auto"}`}
-            >
-              <div className="hidden lg:block absolute top-6 w-4 h-4 rounded-full bg-gold border-4 border-beige" 
-                style={{ [index % 2 === 0 ? "right" : "left"]: "-8px" }} />
-              
-              <div className="p-6 bg-white rounded-2xl border border-border hover:border-gold/50 hover:shadow-lg transition-all duration-300">
-                <div className={`flex items-center gap-4 mb-4 ${index % 2 === 0 ? "lg:flex-row-reverse" : ""}`}>
-                  <div className="h-12 w-12 rounded-xl bg-maroon flex items-center justify-center flex-shrink-0">
-                    <milestone.icon className="h-6 w-6 text-beige" />
-                  </div>
-                  <div className={index % 2 === 0 ? "lg:text-right" : ""}>
-                    <span className="text-gold font-serif text-lg font-semibold">{milestone.year}</span>
-                    <h4 className="font-serif text-xl font-semibold text-charcoal">{milestone.title}</h4>
-                  </div>
-                </div>
-                <p className="text-charcoal-light">{milestone.description}</p>
+        {isLoading ? (
+          <div className="space-y-8">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="lg:w-1/2">
+                <CardSkeleton />
               </div>
-            </motion.div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : achievements.length === 0 ? (
+          <EmptyState
+            icon={Trophy}
+            title="No Achievements Yet"
+            description="Stay tuned for our upcoming accomplishments and awards!"
+          />
+        ) : (
+          <div className="space-y-8 lg:space-y-0">
+            {achievements.map((achievement, index) => {
+              const IconComponent = getIcon(achievement.category);
+              return (
+                <motion.div
+                  key={achievement.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 }}
+                  className={`relative lg:w-1/2 ${index % 2 === 0 ? "lg:pr-12 lg:text-right" : "lg:pl-12 lg:ml-auto"}`}
+                >
+                  <div className="hidden lg:block absolute top-6 w-4 h-4 rounded-full bg-gold border-4 border-beige"
+                    style={{ [index % 2 === 0 ? "right" : "left"]: "-8px" }} />
+
+                  <div className="p-6 bg-white rounded-2xl border border-border hover:border-gold/50 hover:shadow-lg transition-all duration-300">
+                    <div className={`flex items-center gap-4 mb-4 ${index % 2 === 0 ? "lg:flex-row-reverse" : ""}`}>
+                      <div className="h-12 w-12 rounded-xl bg-maroon flex items-center justify-center flex-shrink-0">
+                        <IconComponent className="h-6 w-6 text-beige" />
+                      </div>
+                      <div className={index % 2 === 0 ? "lg:text-right" : ""}>
+                        <span className="text-gold font-serif text-lg font-semibold">{achievement.year}</span>
+                        <h4 className="font-serif text-xl font-semibold text-charcoal">{achievement.title}</h4>
+                      </div>
+                    </div>
+                    {achievement.description && (
+                      <p className="text-charcoal-light">{achievement.description}</p>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       <motion.div
@@ -142,8 +175,8 @@ export function AchievementsSection() {
           &quot;தமிழின் சிறப்பை உலகிற்கு எடுத்துச் செல்வோம்&quot;
         </p>
         <p className="text-beige/80 text-lg max-w-2xl mx-auto">
-          Our journey is not just about awards and recognition. It&apos;s about the countless 
-          moments of cultural exchange, the friendships forged, and the pride in our heritage 
+          Our journey is not just about awards and recognition. It&apos;s about the countless
+          moments of cultural exchange, the friendships forged, and the pride in our heritage
           that we carry forward.
         </p>
       </motion.div>
