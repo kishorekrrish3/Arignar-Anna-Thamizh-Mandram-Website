@@ -63,3 +63,20 @@ export type Registration = {
   message: string | null;
   registration_date: string;
 };
+
+export type KanaiyazhiEdition = {
+  id: string;
+  edition_number: number;
+  title: string;
+  subtitle: string | null;
+  description: string | null;
+  year: number;
+  month: string | null;
+  cover_image_url: string;
+  pdf_url: string;
+  page_count: number | null;
+  is_featured: boolean;
+  display_order: number | null;
+  created_at: string;
+  updated_at: string;
+};

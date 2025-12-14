@@ -36,7 +36,7 @@ export function HeroSection() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-maroon/10 border border-maroon/20">
             <Sparkles className="h-4 w-4 text-gold" />
-            <span className="text-sm font-medium text-maroon">2016 — 2026</span>
+            <span className="text-sm font-medium text-maroon">2014 — 2026</span>
           </div>
         </motion.div>
 
@@ -46,8 +46,8 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold text-charcoal mb-6 leading-[1.1]"
         >
-          <span className="block font-montserrat">ARIGNAR ANNA</span>
-          <span className="block font-montserrat text-maroon">THAMIZH MANDRAM</span>
+          <span className="block font-heading">ARIGNAR ANNA</span>
+          <span className="block font-heading text-maroon">THAMIZH MANDRAM</span>
         </motion.h1>
 
         <motion.p
@@ -92,7 +92,7 @@ export function HeroSection() {
           </Link>
           <Link
             href="#pongal"
-            className="group flex items-center gap-2 px-8 py-4 bg-maroon text-beige font-medium rounded-full hover:bg-maroon-light transition-all duration-300"
+            className="group flex items-center gap-2 px-8 py-4 bg-maroon text-beige font-tamil font-medium rounded-full hover:bg-maroon-light transition-all duration-300"
           >
             <span className="font-tamil">பொங்கல் திருவிழா 2026</span>
           </Link>

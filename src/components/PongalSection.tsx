@@ -2,20 +2,20 @@
 
 import { motion } from "framer-motion";
 import { AnimatedCard } from "./Section";
-import { Calendar, Clock, MapPin, Music, Users, Utensils, Palette, Star } from "lucide-react";
+import { Calendar, Clock, MapPin, Music, Users, Utensils, Palette, Star, Sparkles } from "lucide-react";
 import Image from "next/image";
 
 const highlights = [
-  { icon: Music, label: "Live Performances", description: "Traditional & contemporary" },
-  { icon: Utensils, label: "Authentic Cuisine", description: "Traditional Pongal feast" },
-  { icon: Palette, label: "Kolam Art", description: "Rangoli competition" },
-  { icon: Users, label: "Community", description: "5000+ attendees" },
+  { icon: Music, label: "Cultural Arts", description: "Parai & Silambam Showcase" },
+  { icon: Utensils, label: "Samathuva Pongal", description: "Unified celebration" },
+  { icon: Sparkles, label: "Campus Vibe", description: "Grand festive decorations" },
+  { icon: Users, label: "Massive Audience", description: "5000+ attendees" },
 ];
 
 const schedule = [
-  { day: "Day 1", title: "Bhogi", date: "Jan 13", activities: ["Bonfire ceremony", "Cultural performances", "Traditional games"] },
-  { day: "Day 2", title: "Thai Pongal", date: "Jan 14", activities: ["Pongal cooking", "Music & dance", "Art exhibitions"] },
-  { day: "Day 3", title: "Mattu Pongal", date: "Jan 15", activities: ["Sports competitions", "Prize distribution", "Grand finale"] },
+  { day: "Day 1", title: "January 6, 2026", activities: ["Kho Kho", "Tug of War", "Sattam Pesu"] },
+  { day: "Day 2", title: "January 7, 2026", activities: ["History of Pongal - Showcase", "Silambam"] },
+  { day: "Day 3", title: "January 8, 2026", activities: ["Cultural Performances", "Samathuva Pongal", "Parai", "Uriyadi", "Kanaiyazhi Release"] },
 ];
 
 export function PongalSection() {
@@ -46,7 +46,7 @@ export function PongalSection() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/20 border border-gold/30 mb-6">
               <Star className="h-4 w-4 text-gold" />
-              <span className="text-sm font-medium text-gold">Special 10th Anniversary Edition</span>
+              <span className="text-sm font-medium text-gold">Special 13th Anniversary Edition</span>
             </div>
             <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-beige mb-4">
               Pongal Thiruvizha
@@ -55,7 +55,7 @@ export function PongalSection() {
               பொங்கல் திருவிழா 2026
             </p>
             <p className="text-xl text-beige/80 max-w-2xl mx-auto">
-              The grandest Tamil harvest festival celebration at VIT Chennai. 
+              The grandest Tamil harvest festival celebration at VIT Chennai.
               A three-day extravaganza of culture, tradition, and community.
             </p>
           </motion.div>
@@ -67,8 +67,8 @@ export function PongalSection() {
                   <div className="h-12 w-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
                     <item.icon className="h-6 w-6 text-gold" />
                   </div>
-                  <h4 className="font-serif text-lg font-semibold text-beige mb-1">{item.label}</h4>
-                  <p className="text-sm text-beige/60">{item.description}</p>
+                  <h4 className="font-serif text-lg font-semibold text-beige">{item.label}</h4>
+                  <p className="text-m text-beige/60">{item.description}</p>
                 </div>
               </AnimatedCard>
             ))}
@@ -122,11 +122,11 @@ export function PongalSection() {
                           {day.day}
                         </span>
                         <span className="font-serif text-xl text-beige">{day.title}</span>
-                        <span className="text-beige/60 text-sm">{day.date}</span>
+                        {/* <span className="text-beige/60 text-sm">{day.date}</span> */}
                       </div>
                       <ul className="space-y-1">
                         {day.activities.map((activity) => (
-                          <li key={activity} className="flex items-center gap-2 text-beige/70 text-sm">
+                          <li key={activity} className="flex items-center gap-2 text-beige/70 text-m">
                             <Clock className="h-3 w-3 text-gold" />
                             {activity}
                           </li>
@@ -146,7 +146,7 @@ export function PongalSection() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <p className="text-beige/70 mb-6">Join us in celebrating our Tamil heritage</p>
+            <p className="text-beige/70 text-lg mb-6">Join us in celebrating our Tamil heritage!</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
                 href="#contact"

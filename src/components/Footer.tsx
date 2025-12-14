@@ -38,7 +38,7 @@ export function Footer() {
                 </div>
               </div>
               <p className="text-beige/70 leading-relaxed max-w-md mb-6">
-                Celebrating 10 years of preserving and promoting Tamil language, literature, 
+                Celebrating 13 years of preserving and promoting Tamil language, literature,
                 and culture at VIT Chennai. A journey of heritage, creativity, and community.
               </p>
               <p className="font-tamil text-gold text-lg">
