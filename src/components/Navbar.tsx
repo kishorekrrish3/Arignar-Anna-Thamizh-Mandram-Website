@@ -10,6 +10,7 @@ const navLinks = [
   { href: "#events", label: "Events" },
   { href: "#team", label: "Team" },
   { href: "#gallery", label: "Gallery" },
+  { href: "#kanaiyazhi", label: "Kanaiyazhi" },
   { href: "#achievements", label: "Legacy" },
   { href: "#contact", label: "Contact" },
 ];
@@ -40,13 +41,12 @@ export function Navbar() {
         <nav className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <div className="relative">
-                <div className="h-10 w-10 rounded-full bg-maroon flex items-center justify-center">
-                  <span className="text-gold font-serif font-bold text-lg">ஆ</span>
-                </div>
-                <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-gold flex items-center justify-center">
-                  <span className="text-[8px] font-bold text-charcoal">10</span>
-                </div>
+              <div className="relative h-14 w-14">
+                <img
+                  src="/logo.png"
+                  alt="AATM Logo"
+                  className="h-full w-full object-contain"
+                />
               </div>
               <div className="hidden sm:block">
                 <p className="font-serif text-lg font-semibold text-charcoal leading-tight">

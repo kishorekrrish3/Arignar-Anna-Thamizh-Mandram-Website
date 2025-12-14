@@ -116,10 +116,20 @@ export function TeamSection() {
               {coreCommittee.map((member, index) => (
                 <AnimatedCard key={member.id} delay={index * 0.05}>
                   <div className="text-center p-4 rounded-xl hover:bg-beige-dark transition-colors">
-                    <div className="h-16 w-16 rounded-full bg-gradient-to-br from-maroon to-maroon-light flex items-center justify-center mx-auto mb-3">
-                      <span className="text-beige font-serif text-xl font-semibold">
-                        {member.name.charAt(0)}
-                      </span>
+                    <div className="h-24 w-24 rounded-full bg-gradient-to-br from-maroon to-maroon-light flex items-center justify-center mx-auto mb-3 overflow-hidden relative">
+                      {member.image_url ? (
+                        <Image
+                          src={member.image_url}
+                          alt={member.name}
+                          fill
+                          sizes="96px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <span className="text-beige font-serif text-2xl font-semibold">
+                          {member.name.charAt(0)}
+                        </span>
+                      )}
                     </div>
                     <h4 className="font-medium text-charcoal text-sm">{member.name}</h4>
                     <p className="text-xs text-charcoal-light">{member.role}</p>
