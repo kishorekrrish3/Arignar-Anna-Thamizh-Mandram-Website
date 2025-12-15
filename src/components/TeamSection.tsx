@@ -5,13 +5,14 @@ import { motion } from "framer-motion";
 import { Section, SectionHeader, AnimatedCard } from "./Section";
 import Image from "next/image";
 import { User, Users } from "lucide-react";
-import { getOfficeBearers, getCoreCommittee } from "@/lib/api/team";
+import { getOfficeBearers, getCoreCommittee, getFacultyCoordinators } from "@/lib/api/team";
 import type { TeamMember } from "@/lib/supabase";
 import { CardSkeleton } from "./ui/LoadingSkeleton";
 import { EmptyState } from "./ui/EmptyState";
 
 export function TeamSection() {
   const [officeBearers, setOfficeBearers] = useState<TeamMember[]>([]);
+  const [facultyCoordinators, setFacultyCoordinators] = useState<TeamMember[]>([]);
   const [coreCommittee, setCoreCommittee] = useState<TeamMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -19,11 +20,13 @@ export function TeamSection() {
     async function fetchTeamMembers() {
       setIsLoading(true);
       try {
-        const [bearers, committee] = await Promise.all([
+        const [bearers, faculty, committee] = await Promise.all([
           getOfficeBearers(),
+          getFacultyCoordinators(),
           getCoreCommittee(),
         ]);
         setOfficeBearers(bearers);
+        setFacultyCoordinators(faculty);
         setCoreCommittee(committee);
       } catch (error) {
         console.error("Error fetching team members:", error);
@@ -42,6 +45,62 @@ export function TeamSection() {
         title="The Team Behind the Vision"
         subtitle="Dedicated individuals who work tirelessly to preserve and promote Tamil culture at VIT Chennai"
       />
+
+      <div className="mb-20">
+        <h3 className="font-serif text-2xl text-charcoal text-center mb-12">Faculty Coordinators</h3>
+        {isLoading ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-center">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <CardSkeleton key={i} />
+            ))}
+          </div>
+        ) : facultyCoordinators.length === 0 ? (
+          <EmptyState
+            icon={User}
+            title="No Faculty Coordinators Listed"
+            description="Faculty coordinator information will be updated soon!"
+          />
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-center">
+            {facultyCoordinators.map((member, index) => (
+              <AnimatedCard key={`faculty-${member.id}`} delay={index * 0.1}>
+                <motion.div
+                  whileHover={{ y: -8 }}
+                  className="group relative"
+                >
+                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-4">
+                    {member.image_url ? (
+                      <>
+                        <Image
+                          src={member.image_url}
+                          alt={member.name}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        {member.bio && (
+                          <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p className="text-sm text-beige/80 italic line-clamp-2">&ldquo;{member.bio}&rdquo;</p>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-maroon/20 to-gold/20 flex items-center justify-center">
+                        <User className="h-24 w-24 text-maroon/40" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-center">
+                    <h4 className="font-serif text-xl font-semibold text-charcoal">{member.name}</h4>
+                    <p className="text-sm text-maroon font-medium">{member.role}</p>
+                  </div>
+                </motion.div>
+              </AnimatedCard>
+            ))}
+          </div>
+        )}
+      </div>
 
       <div className="mb-20">
         <h3 className="font-serif text-2xl text-charcoal text-center mb-12">Office Bearers</h3>
@@ -112,21 +171,21 @@ export function TeamSection() {
           ) : coreCommittee.length === 0 ? (
             <p className="text-center text-charcoal-light">Core committee members will be listed soon.</p>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
               {coreCommittee.map((member, index) => (
                 <AnimatedCard key={member.id} delay={index * 0.05}>
-                  <div className="text-center p-4 rounded-xl hover:bg-beige-dark transition-colors">
-                    <div className="h-24 w-24 rounded-full bg-gradient-to-br from-maroon to-maroon-light flex items-center justify-center mx-auto mb-3 overflow-hidden relative">
+                  <div className="text-center p-4 rounded-xl hover:bg-beige-dark transition-all duration-300 hover:scale-105 cursor-pointer">
+                    <div className="h-40 w-40 rounded-full bg-gradient-to-br from-maroon to-maroon-light flex items-center justify-center mx-auto mb-3 overflow-hidden relative">
                       {member.image_url ? (
                         <Image
                           src={member.image_url}
                           alt={member.name}
                           fill
-                          sizes="96px"
+                          sizes="160px"
                           className="object-cover"
                         />
                       ) : (
-                        <span className="text-beige font-serif text-2xl font-semibold">
+                        <span className="text-beige font-serif text-3xl font-semibold">
                           {member.name.charAt(0)}
                         </span>
                       )}

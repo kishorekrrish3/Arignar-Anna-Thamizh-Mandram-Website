@@ -21,7 +21,7 @@ export async function getOfficeBearers(): Promise<TeamMember[]> {
 }
 
 /**
- * Fetch core committee members (is_office_bearer = false)
+ * Fetch core committee members (is_office_bearer = false AND is_faculty = false)
  * Ordered by position_order ascending
  */
 export async function getCoreCommittee(): Promise<TeamMember[]> {
@@ -29,10 +29,30 @@ export async function getCoreCommittee(): Promise<TeamMember[]> {
         .from('team_members')
         .select('*')
         .eq('is_office_bearer', false)
+        .eq('is_faculty', false)
         .order('position_order', { ascending: true, nullsFirst: false });
 
     if (error) {
         console.error('Error fetching core committee:', error);
+        return [];
+    }
+
+    return data || [];
+}
+
+/**
+ * Fetch faculty coordinators (is_faculty = true)
+ * Ordered by position_order ascending
+ */
+export async function getFacultyCoordinators(): Promise<TeamMember[]> {
+    const { data, error } = await supabase
+        .from('team_members')
+        .select('*')
+        .eq('is_faculty', true)
+        .order('position_order', { ascending: true, nullsFirst: false });
+
+    if (error) {
+        console.error('Error fetching faculty coordinators:', error);
         return [];
     }
 
