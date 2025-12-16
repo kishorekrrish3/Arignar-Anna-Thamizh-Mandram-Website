@@ -1,20 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { AnimatedCard } from "./Section";
-import { Calendar, Clock, MapPin, Music, Users, Utensils, Palette, Star, Sparkles, ImageIcon } from "lucide-react";
+import { Clock, Music, Users, Utensils, Star, Sparkles, ImageIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { getPongalGalleryImages } from "@/lib/api/gallery";
 import type { GalleryImage } from "@/lib/supabase";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 
 const highlights = [
   { icon: Music, label: "Cultural Arts", description: "Parai & Silambam Showcase" },
@@ -32,7 +24,9 @@ const schedule = [
 export function PongalSection() {
   const [pongalImages, setPongalImages] = useState<GalleryImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Fetch images from Supabase
   useEffect(() => {
     async function fetchPongalImages() {
       setIsLoading(true);
@@ -49,9 +43,29 @@ export function PongalSection() {
     fetchPongalImages();
   }, []);
 
+  // Auto-advance slides every 5 seconds
+  useEffect(() => {
+    if (pongalImages.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % pongalImages.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [pongalImages.length]);
+
+  const goToPrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + pongalImages.length) % pongalImages.length);
+  }, [pongalImages.length]);
+
+  const goToNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % pongalImages.length);
+  }, [pongalImages.length]);
+
   return (
     <section id="pongal" className="relative overflow-hidden">
       <div className="relative min-h-screen bg-gradient-to-br from-maroon via-maroon-light to-maroon py-20 lg:py-32">
+        {/* Background Pattern */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-full opacity-10">
             <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -67,6 +81,7 @@ export function PongalSection() {
         <div className="absolute bottom-20 left-20 w-48 h-48 bg-gold/10 rounded-full blur-2xl" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -90,6 +105,7 @@ export function PongalSection() {
             </p>
           </motion.div>
 
+          {/* Highlights */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {highlights.map((item, index) => (
               <AnimatedCard key={item.label} delay={index * 0.1}>
@@ -104,72 +120,103 @@ export function PongalSection() {
             ))}
           </div>
 
+          {/* Carousel + Schedule Grid */}
           <div className="grid lg:grid-cols-3 gap-12 items-stretch mb-16">
+            {/* Carousel - Takes 2/3 */}
             <AnimatedCard className="lg:col-span-2">
-              <div className="relative w-full aspect-video">
+              <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
                 {/* Glow Effect */}
                 <div className="absolute -inset-4 bg-gold/20 blur-3xl rounded-3xl -z-10" />
 
                 {/* Carousel Container */}
-                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-charcoal/50">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-charcoal/30">
                   {isLoading ? (
-                    <div className="w-full h-full bg-beige/10 flex items-center justify-center">
-                      <div className="animate-pulse text-beige/60">Loading images...</div>
+                    <div className="absolute inset-0 flex items-center justify-center bg-beige/10">
+                      <div className="animate-pulse text-beige/60 text-lg">Loading images...</div>
                     </div>
                   ) : pongalImages.length === 0 ? (
-                    <div className="w-full h-full bg-gradient-to-br from-maroon/40 to-gold/20 flex flex-col items-center justify-center gap-4">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-maroon/40 to-gold/20">
                       <ImageIcon className="h-16 w-16 text-beige/40" />
                       <p className="text-beige/60 text-center px-4">No Pongal celebration images available yet</p>
                     </div>
                   ) : (
-                    <Carousel
-                      className="w-full h-full"
-                      plugins={[
-                        Autoplay({
-                          delay: 4000,
-                          stopOnInteraction: false,
-                        }),
-                      ]}
-                    >
-                      <CarouselContent className="h-full ml-0">
-                        {pongalImages.map((image) => (
-                          <CarouselItem key={image.id} className="h-full pl-0">
-                            <div className="relative w-full h-full group">
-                              <div className="relative w-full h-full overflow-hidden">
-                                <Image
-                                  src={image.image_url}
-                                  alt={image.title || "Pongal Celebration"}
-                                  fill
-                                  sizes="(max-width: 1024px) 100vw, 66vw"
-                                  className="object-cover transition-transform duration-[8000ms] ease-out group-hover:scale-110"
-                                  style={{
-                                    animation: 'kenburns 8s ease-out infinite'
-                                  }}
-                                />
-                              </div>
-                              <div className="absolute inset-0 bg-gradient-to-t from-maroon/80 via-transparent to-transparent" />
-                              {image.title && (
-                                <div className="absolute bottom-6 left-6 right-6">
-                                  <p className="text-beige font-serif text-lg md:text-xl font-semibold">
-                                    {image.title}
-                                  </p>
-                                  {image.description && (
-                                    <p className="text-beige/80 text-sm mt-1">{image.description}</p>
-                                  )}
-                                </div>
+                    <>
+                      {/* Images */}
+                      {pongalImages.map((image, index) => (
+                        <div
+                          key={image.id}
+                          className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                            }`}
+                        >
+                          <Image
+                            src={image.image_url}
+                            alt={image.title || "Pongal Celebration"}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 66vw"
+                            className="object-cover"
+                            style={{
+                              animation: index === currentIndex ? 'kenburns 8s ease-out forwards' : 'none'
+                            }}
+                            priority={index === 0}
+                          />
+                          {/* Gradient Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-maroon/80 via-transparent to-transparent" />
+
+                          {/* Image Title */}
+                          {image.title && (
+                            <div className="absolute bottom-6 left-6 right-6">
+                              <p className="text-beige font-serif text-lg md:text-xl font-semibold">
+                                {image.title}
+                              </p>
+                              {image.description && (
+                                <p className="text-beige/80 text-sm mt-1">{image.description}</p>
                               )}
                             </div>
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                      <CarouselPrevious className="left-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm z-10" />
-                      <CarouselNext className="right-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm z-10" />
-                    </Carousel>
+                          )}
+                        </div>
+                      ))}
+
+                      {/* Navigation Buttons */}
+                      {pongalImages.length > 1 && (
+                        <>
+                          <button
+                            onClick={goToPrevious}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-beige/20 border border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm transition-colors"
+                            aria-label="Previous image"
+                          >
+                            <ChevronLeft className="h-6 w-6" />
+                          </button>
+                          <button
+                            onClick={goToNext}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-beige/20 border border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm transition-colors"
+                            aria-label="Next image"
+                          >
+                            <ChevronRight className="h-6 w-6" />
+                          </button>
+
+                          {/* Dots Indicator */}
+                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                            {pongalImages.map((_, index) => (
+                              <button
+                                key={index}
+                                onClick={() => setCurrentIndex(index)}
+                                className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex
+                                    ? 'bg-gold w-6'
+                                    : 'bg-beige/40 hover:bg-beige/60'
+                                  }`}
+                                aria-label={`Go to slide ${index + 1}`}
+                              />
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
             </AnimatedCard>
 
+            {/* Event Schedule - Takes 1/3 */}
             <AnimatedCard delay={0.2}>
               <div>
                 <h3 className="font-serif text-3xl font-semibold text-beige mb-8">Event Schedule</h3>
@@ -189,7 +236,6 @@ export function PongalSection() {
                           {day.day}
                         </span>
                         <span className="font-serif text-xl text-beige">{day.title}</span>
-                        {/* <span className="text-beige/60 text-sm">{day.date}</span> */}
                       </div>
                       <ul className="space-y-1">
                         {day.activities.map((activity) => (
@@ -206,6 +252,7 @@ export function PongalSection() {
             </AnimatedCard>
           </div>
 
+          {/* CTA Section */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
