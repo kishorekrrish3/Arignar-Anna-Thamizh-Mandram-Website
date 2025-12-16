@@ -1,9 +1,20 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { AnimatedCard } from "./Section";
-import { Calendar, Clock, MapPin, Music, Users, Utensils, Palette, Star, Sparkles } from "lucide-react";
+import { Calendar, Clock, MapPin, Music, Users, Utensils, Palette, Star, Sparkles, ImageIcon } from "lucide-react";
 import Image from "next/image";
+import { getPongalGalleryImages } from "@/lib/api/gallery";
+import type { GalleryImage } from "@/lib/supabase";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const highlights = [
   { icon: Music, label: "Cultural Arts", description: "Parai & Silambam Showcase" },
@@ -19,6 +30,24 @@ const schedule = [
 ];
 
 export function PongalSection() {
+  const [pongalImages, setPongalImages] = useState<GalleryImage[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchPongalImages() {
+      setIsLoading(true);
+      try {
+        const images = await getPongalGalleryImages();
+        setPongalImages(images);
+      } catch (error) {
+        console.error("Error fetching pongal images:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchPongalImages();
+  }, []);
   return (
     <section id="pongal" className="relative overflow-hidden">
       <div className="relative min-h-screen bg-gradient-to-br from-maroon via-maroon-light to-maroon py-20 lg:py-32">
@@ -74,31 +103,65 @@ export function PongalSection() {
             ))}
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            <AnimatedCard>
-              <div className="relative">
-                <div className="absolute -inset-2 bg-gold/20 rounded-3xl blur-xl" />
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                  <Image
-                    src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&q=80"
-                    alt="Pongal Celebration"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-maroon/80 via-transparent to-transparent" />
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <div className="flex items-center gap-4 text-beige">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-gold" />
-                        <span className="text-sm">January 13-15, 2026</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-gold" />
-                        <span className="text-sm">VIT Chennai Campus</span>
-                      </div>
+          <div className="grid lg:grid-cols-3 gap-12 items-stretch mb-16">
+            <AnimatedCard className="lg:col-span-2">
+              <div className="relative h-full">
+                <div className="absolute -inset-4 bg-gold/20 blur-3xl aspect-video rounded-3xl" />
+                <div className="relative aspect-video rounded-2xl overflow-hidden">
+                  {isLoading ? (
+                    <div className="w-full h-full bg-beige/10 flex items-center justify-center">
+                      <div className="animate-pulse text-beige/60">Loading images...</div>
                     </div>
-                  </div>
+                  ) : pongalImages.length === 0 ? (
+                    <div className="w-full h-full bg-gradient-to-br from-maroon/40 to-gold/20 flex flex-col items-center justify-center gap-4">
+                      <ImageIcon className="h-16 w-16 text-beige/40" />
+                      <p className="text-beige/60 text-center px-4">No Pongal celebration images available yet</p>
+                    </div>
+                  ) : (
+                    <Carousel
+                      className="w-full h-full"
+                      plugins={[
+                        Autoplay({
+                          delay: 4000,
+                          stopOnInteraction: false,
+                        }),
+                      ]}
+                    >
+                      <CarouselContent className="h-full">
+                        {pongalImages.map((image) => (
+                          <CarouselItem key={image.id} className="h-full">
+                            <div className="relative w-full h-full group">
+                              <div className="relative w-full h-full overflow-hidden">
+                                <Image
+                                  src={image.image_url}
+                                  alt={image.title || "Pongal Celebration"}
+                                  fill
+                                  sizes="(max-width: 1024px) 100vw, 66vw"
+                                  className="object-cover transition-transform duration-[8000ms] ease-out group-hover:scale-110"
+                                  style={{
+                                    animation: 'kenburns 8s ease-out infinite'
+                                  }}
+                                />
+                              </div>
+                              <div className="absolute inset-0 bg-gradient-to-t from-maroon/80 via-transparent to-transparent" />
+                              {image.title && (
+                                <div className="absolute bottom-6 left-6 right-6">
+                                  <p className="text-beige font-serif text-lg md:text-xl font-semibold">
+                                    {image.title}
+                                  </p>
+                                  {image.description && (
+                                    <p className="text-beige/80 text-sm mt-1">{image.description}</p>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious className="left-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm" />
+                      <CarouselNext className="right-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm" />
+                    </Carousel>
+                  )}
                 </div>
               </div>
             </AnimatedCard>

@@ -52,6 +52,7 @@ export type GalleryImage = {
   event_id: string | null;
   category: string | null;
   display_order: number | null;
+  pongal_images: boolean;
   created_at: string;
 };
 
