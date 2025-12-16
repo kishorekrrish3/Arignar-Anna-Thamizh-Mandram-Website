@@ -14,7 +14,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 
 const highlights = [
   { icon: Music, label: "Cultural Arts", description: "Parai & Silambam Showcase" },
@@ -48,6 +47,7 @@ export function PongalSection() {
 
     fetchPongalImages();
   }, []);
+
   return (
     <section id="pongal" className="relative overflow-hidden">
       <div className="relative min-h-screen bg-gradient-to-br from-maroon via-maroon-light to-maroon py-20 lg:py-32">
@@ -103,11 +103,11 @@ export function PongalSection() {
             ))}
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-12 items-stretch mb-16">
-            <AnimatedCard className="lg:col-span-2">
-              <div className="relative h-full">
-                <div className="absolute -inset-4 bg-gold/20 blur-3xl aspect-video rounded-3xl" />
-                <div className="relative aspect-video rounded-2xl overflow-hidden">
+          <div className="grid lg:grid-cols-2 gap-12 items-stretch mb-16">
+            <AnimatedCard>
+              <div className="relative h-full min-h-[400px] lg:min-h-[500px]">
+                <div className="absolute -inset-2 bg-gold/20 rounded-3xl blur-xl" />
+                <div className="relative h-full rounded-2xl overflow-hidden">
                   {isLoading ? (
                     <div className="w-full h-full bg-beige/10 flex items-center justify-center">
                       <div className="animate-pulse text-beige/60">Loading images...</div>
@@ -118,31 +118,18 @@ export function PongalSection() {
                       <p className="text-beige/60 text-center px-4">No Pongal celebration images available yet</p>
                     </div>
                   ) : (
-                    <Carousel
-                      className="w-full h-full"
-                      plugins={[
-                        Autoplay({
-                          delay: 4000,
-                          stopOnInteraction: false,
-                        }),
-                      ]}
-                    >
+                    <Carousel className="w-full h-full">
                       <CarouselContent className="h-full">
                         {pongalImages.map((image) => (
                           <CarouselItem key={image.id} className="h-full">
-                            <div className="relative w-full h-full group">
-                              <div className="relative w-full h-full overflow-hidden">
-                                <Image
-                                  src={image.image_url}
-                                  alt={image.title || "Pongal Celebration"}
-                                  fill
-                                  sizes="(max-width: 1024px) 100vw, 66vw"
-                                  className="object-cover transition-transform duration-[8000ms] ease-out group-hover:scale-110"
-                                  style={{
-                                    animation: 'kenburns 8s ease-out infinite'
-                                  }}
-                                />
-                              </div>
+                            <div className="relative w-full h-full min-h-[400px] lg:min-h-[500px]">
+                              <Image
+                                src={image.image_url}
+                                alt={image.title || "Pongal Celebration"}
+                                fill
+                                sizes="(max-width: 1024px) 100vw, 50vw"
+                                className="object-cover"
+                              />
                               <div className="absolute inset-0 bg-gradient-to-t from-maroon/80 via-transparent to-transparent" />
                               {image.title && (
                                 <div className="absolute bottom-6 left-6 right-6">
@@ -158,8 +145,8 @@ export function PongalSection() {
                           </CarouselItem>
                         ))}
                       </CarouselContent>
-                      <CarouselPrevious className="left-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm" />
-                      <CarouselNext className="right-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm" />
+                      <CarouselPrevious className="left-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30" />
+                      <CarouselNext className="right-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30" />
                     </Carousel>
                   )}
                 </div>
