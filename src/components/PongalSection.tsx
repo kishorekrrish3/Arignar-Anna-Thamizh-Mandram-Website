@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { AnimatedCard } from "./Section";
 import { Calendar, Clock, MapPin, Music, Users, Utensils, Palette, Star, Sparkles, ImageIcon } from "lucide-react";
 import Image from "next/image";
-import { getGalleryImages } from "@/lib/api/gallery";
+import { getPongalGalleryImages } from "@/lib/api/gallery";
 import type { GalleryImage } from "@/lib/supabase";
 import {
   Carousel,
@@ -37,8 +37,7 @@ export function PongalSection() {
     async function fetchPongalImages() {
       setIsLoading(true);
       try {
-        const images = await getGalleryImages();
-        console.log("Fetched Pongal Images:", images);
+        const images = await getPongalGalleryImages();
         setPongalImages(images);
       } catch (error) {
         console.error("Error fetching pongal images:", error);
@@ -107,9 +106,12 @@ export function PongalSection() {
 
           <div className="grid lg:grid-cols-3 gap-12 items-stretch mb-16">
             <AnimatedCard className="lg:col-span-2">
-              <div className="relative h-full">
-                <div className="absolute -inset-4 bg-gold/20 blur-3xl aspect-video rounded-3xl" />
-                <div className="relative aspect-video rounded-2xl overflow-hidden">
+              <div className="relative w-full aspect-video">
+                {/* Glow Effect */}
+                <div className="absolute -inset-4 bg-gold/20 blur-3xl rounded-3xl -z-10" />
+
+                {/* Carousel Container */}
+                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-charcoal/50">
                   {isLoading ? (
                     <div className="w-full h-full bg-beige/10 flex items-center justify-center">
                       <div className="animate-pulse text-beige/60">Loading images...</div>
@@ -129,9 +131,9 @@ export function PongalSection() {
                         }),
                       ]}
                     >
-                      <CarouselContent className="h-full">
+                      <CarouselContent className="h-full ml-0">
                         {pongalImages.map((image) => (
-                          <CarouselItem key={image.id} className="h-full">
+                          <CarouselItem key={image.id} className="h-full pl-0">
                             <div className="relative w-full h-full group">
                               <div className="relative w-full h-full overflow-hidden">
                                 <Image
@@ -160,8 +162,8 @@ export function PongalSection() {
                           </CarouselItem>
                         ))}
                       </CarouselContent>
-                      <CarouselPrevious className="left-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm" />
-                      <CarouselNext className="right-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm" />
+                      <CarouselPrevious className="left-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm z-10" />
+                      <CarouselNext className="right-4 bg-beige/20 border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm z-10" />
                     </Carousel>
                   )}
                 </div>
