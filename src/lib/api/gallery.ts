@@ -2,13 +2,15 @@ import { supabase } from '../supabase';
 import type { GalleryImage } from '../supabase';
 
 /**
- * Fetch all gallery images
+ * Fetch gallery images that should be shown in the main Gallery section
+ * Filters by show_in_gallery = true
  * Ordered by display_order (if set), then by created_at descending
  */
 export async function getGalleryImages(): Promise<GalleryImage[]> {
     const { data, error } = await supabase
         .from('gallery_images')
         .select('*')
+        .eq('show_in_gallery', true)
         .order('display_order', { ascending: true, nullsFirst: false })
         .order('created_at', { ascending: false });
 

@@ -53,6 +53,7 @@ export type GalleryImage = {
   category: string | null;
   display_order: number | null;
   pongal_images: boolean;
+  show_in_gallery: boolean;
   created_at: string;
 };
 
