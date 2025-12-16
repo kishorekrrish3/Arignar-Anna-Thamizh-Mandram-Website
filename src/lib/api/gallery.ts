@@ -57,3 +57,22 @@ export async function getGalleryImagesByEvent(eventId: string): Promise<GalleryI
 
     return data || [];
 }
+
+/**
+ * Fetch gallery images for Pongal celebration
+ */
+export async function getPongalGalleryImages(): Promise<GalleryImage[]> {
+    const { data, error } = await supabase
+        .from('gallery_images')
+        .select('*')
+        .eq('pongal_images', true)
+        .order('display_order', { ascending: true, nullsFirst: false })
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching pongal gallery images:', error);
+        return [];
+    }
+
+    return data || [];
+}
