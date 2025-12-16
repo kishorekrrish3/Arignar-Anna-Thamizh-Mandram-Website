@@ -5,13 +5,27 @@ import { motion } from "framer-motion";
 import { Section, SectionHeader, AnimatedCard } from "./Section";
 import { Calendar, MapPin, Users, ArrowUpRight, CalendarX } from "lucide-react";
 import Image from "next/image";
-import { getUpcomingEvents, getPastEvents } from "@/lib/api/events";
+import { getFeaturedEvents, getPastEvents } from "@/lib/api/events";
 import type { Event } from "@/lib/supabase";
 import { LoadingSkeleton } from "./ui/LoadingSkeleton";
 import { EmptyState } from "./ui/EmptyState";
 
+// Helper to resolve image URLs
+function resolveImageUrl(url: string | null) {
+  if (!url) return null;
+  const cleanUrl = url.trim();
+  if (cleanUrl.startsWith('http') || cleanUrl.startsWith('/')) return cleanUrl;
+
+  // If it's just a filename, assume it's in the 'events' bucket in Supabase
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (supabaseUrl) {
+    return `${supabaseUrl}/storage/v1/object/public/events/${cleanUrl}`;
+  }
+  return cleanUrl;
+}
+
 export function EventsSection() {
-  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+  const [featuredEvents, setFeaturedEvents] = useState<Event[]>([]);
   const [pastEvents, setPastEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -19,11 +33,11 @@ export function EventsSection() {
     async function fetchEvents() {
       setIsLoading(true);
       try {
-        const [upcoming, past] = await Promise.all([
-          getUpcomingEvents(),
+        const [featured, past] = await Promise.all([
+          getFeaturedEvents(),
           getPastEvents(4),
         ]);
-        setUpcomingEvents(upcoming);
+        setFeaturedEvents(featured);
         setPastEvents(past);
       } catch (error) {
         console.error("Error fetching events:", error);
@@ -48,26 +62,26 @@ export function EventsSection() {
 
         {isLoading ? (
           <LoadingSkeleton count={3} className="grid lg:grid-cols-3 gap-8 mb-20" />
-        ) : upcomingEvents.length === 0 ? (
+        ) : featuredEvents.length === 0 ? (
           <div className="mb-20">
             <EmptyState
               icon={CalendarX}
-              title="No Upcoming Events"
+              title="No Featured Events"
               description="Check back soon for exciting Tamil cultural events and celebrations!"
             />
           </div>
         ) : (
           <div className="grid lg:grid-cols-3 gap-8 mb-20">
-            {upcomingEvents.slice(0, 3).map((event, index) => (
+            {featuredEvents.map((event, index) => (
               <AnimatedCard key={event.id} delay={index * 0.1}>
                 <motion.div
                   whileHover={{ y: -8 }}
                   className="group relative bg-beige-dark rounded-2xl overflow-hidden"
                 >
                   <div className="relative h-48 overflow-hidden">
-                    {event.image_url ? (
+                    {resolveImageUrl(event.image_url) ? (
                       <Image
-                        src={event.image_url}
+                        src={resolveImageUrl(event.image_url)!}
                         alt={event.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -90,7 +104,7 @@ export function EventsSection() {
                       {event.title}
                     </h3>
                     {event.description && (
-                      <p className="text-sm text-charcoal-light mb-4 line-clamp-2">
+                      <p className="text-sm text-charcoal-light mb-4">
                         {event.description}
                       </p>
                     )}

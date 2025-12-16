@@ -164,7 +164,9 @@ export function KanaiyazhiSection() {
                         Interested in contributing to our next edition?
                     </p>
                     <a
-                        href="#contact"
+                        href="https://forms.gle/ha19PqCKpVWtx3Ep9"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-6 py-3 bg-maroon text-beige font-medium rounded-full hover:bg-maroon-light transition-colors"
                     >
                         Submit Your Work

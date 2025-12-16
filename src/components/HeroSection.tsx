@@ -54,9 +54,9 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-tamil text-2xl sm:text-3xl md:text-4xl text-gold mb-4"
+          className="font-tamil text-xl sm:text-2xl md:text-3xl text-gold mb-4"
         >
-          அறிஞர் அண்ணா தமிழ் மன்றம்
+          பிறப்பொக்கும் எல்லா உயிர்க்கும்
         </motion.p>
 
         <motion.p
@@ -107,7 +107,7 @@ export function HeroSection() {
           {[
             { value: "13+", label: "Years" },
             { value: "300+", label: "Events" },
-            { value: "5000+", label: "Members" },
+            { value: "8000+", label: "Members" },
           ].map((stat, index) => (
             <motion.div
               key={stat.label}
