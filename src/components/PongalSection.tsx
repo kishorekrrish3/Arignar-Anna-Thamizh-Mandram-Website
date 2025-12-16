@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { AnimatedCard } from "./Section";
 import { Calendar, Clock, MapPin, Music, Users, Utensils, Palette, Star, Sparkles, ImageIcon } from "lucide-react";
 import Image from "next/image";
-import { getPongalGalleryImages } from "@/lib/api/gallery";
+import { getGalleryImages } from "@/lib/api/gallery";
 import type { GalleryImage } from "@/lib/supabase";
 import {
   Carousel,
@@ -37,7 +37,8 @@ export function PongalSection() {
     async function fetchPongalImages() {
       setIsLoading(true);
       try {
-        const images = await getPongalGalleryImages();
+        const images = await getGalleryImages();
+        console.log("Fetched Pongal Images:", images);
         setPongalImages(images);
       } catch (error) {
         console.error("Error fetching pongal images:", error);
