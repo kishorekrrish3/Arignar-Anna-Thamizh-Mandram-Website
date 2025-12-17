@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { Instagram, Youtube, Mail, MapPin } from "lucide-react";
 
 const socialLinks = [
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Youtube, href: "#", label: "YouTube" },
-  { icon: Mail, href: "mailto:aatm@vit.ac.in", label: "Email" },
+  { icon: Instagram, href: "https://www.instagram.com/thamizh_mandram_vitcc/", label: "Instagram" },
+  { icon: Youtube, href: "https://www.youtube.com/@arignarannathamizhmandramvitc", label: "YouTube" },
+  { icon: Mail, href: "mailto:thamizhmandram.forum@gmail.com", label: "Email" },
 ];
 
 const quickLinks = [
@@ -100,7 +100,7 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <span className="text-beige/50 text-sm">Celebrating</span>
               <span className="px-3 py-1 bg-gold/20 rounded-full text-gold text-sm font-semibold">
-                10 Years
+                13 Years
               </span>
               <span className="text-beige/50 text-sm">of Legacy</span>
             </div>

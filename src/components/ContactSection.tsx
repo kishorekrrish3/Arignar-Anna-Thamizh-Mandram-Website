@@ -37,7 +37,7 @@ export function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch('/api/registrations', {
         method: 'POST',
@@ -108,10 +108,10 @@ export function ContactSection() {
                 For any queries, feel free to contact us at:
               </p>
               <a
-                href="mailto:aatm@vit.ac.in"
+                href="mailto:thamizhmandram.forum@gmail.com"
                 className="text-maroon hover:text-maroon-light transition-colors font-medium"
               >
-                aatm@vit.ac.in
+                thamizhmandram.forum@gmail.com
               </a>
             </div>
           </div>
