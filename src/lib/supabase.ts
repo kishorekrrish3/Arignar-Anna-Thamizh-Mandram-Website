@@ -29,6 +29,7 @@ export type TeamMember = {
   linkedin_url: string | null;
   is_office_bearer: boolean;
   is_faculty: boolean;
+  year: number | null;
   created_at: string;
   updated_at: string;
 };
