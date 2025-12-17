@@ -76,7 +76,7 @@ export function TeamSection() {
                           alt={member.name}
                           fill
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                          className="object-cover transition-all duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         {member.bio && (
@@ -132,7 +132,7 @@ export function TeamSection() {
                           alt={member.name}
                           fill
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                          className="object-cover transition-all duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         {member.bio && (

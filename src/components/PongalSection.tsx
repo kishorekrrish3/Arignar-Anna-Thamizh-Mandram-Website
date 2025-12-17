@@ -201,8 +201,8 @@ export function PongalSection() {
                                 key={index}
                                 onClick={() => setCurrentIndex(index)}
                                 className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex
-                                    ? 'bg-gold w-6'
-                                    : 'bg-beige/40 hover:bg-beige/60'
+                                  ? 'bg-gold w-6'
+                                  : 'bg-beige/40 hover:bg-beige/60'
                                   }`}
                                 aria-label={`Go to slide ${index + 1}`}
                               />
@@ -263,7 +263,9 @@ export function PongalSection() {
             <p className="text-beige/70 text-lg mb-6">Join us in celebrating our Tamil heritage!</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href="#contact"
+                href="https://eventhubcc.vit.ac.in/EventHub/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="px-8 py-4 bg-gold text-charcoal font-medium rounded-full hover:bg-gold-muted transition-colors"
               >
                 Register Now

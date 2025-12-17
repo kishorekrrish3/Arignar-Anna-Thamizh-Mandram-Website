@@ -4,11 +4,14 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Section, SectionHeader } from "./Section";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import Link from "next/link";
+import { X, ChevronLeft, ChevronRight, ImageIcon, ArrowRight } from "lucide-react";
 import { getGalleryImages } from "@/lib/api/gallery";
 import type { GalleryImage } from "@/lib/supabase";
 import { LoadingSkeleton } from "./ui/LoadingSkeleton";
 import { EmptyState } from "./ui/EmptyState";
+
+const MAX_IMAGES_DISPLAY = 8;
 
 export function GallerySection() {
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
@@ -31,15 +34,19 @@ export function GallerySection() {
     fetchGalleryImages();
   }, []);
 
+  // Only show first 8 images on homepage
+  const displayImages = galleryImages.slice(0, MAX_IMAGES_DISPLAY);
+  const hasMoreImages = galleryImages.length > MAX_IMAGES_DISPLAY;
+
   const handlePrev = () => {
     if (selectedImage !== null) {
-      setSelectedImage(selectedImage === 0 ? galleryImages.length - 1 : selectedImage - 1);
+      setSelectedImage(selectedImage === 0 ? displayImages.length - 1 : selectedImage - 1);
     }
   };
 
   const handleNext = () => {
     if (selectedImage !== null) {
-      setSelectedImage(selectedImage === galleryImages.length - 1 ? 0 : selectedImage + 1);
+      setSelectedImage(selectedImage === displayImages.length - 1 ? 0 : selectedImage + 1);
     }
   };
 
@@ -64,39 +71,51 @@ export function GallerySection() {
             description="Check back soon for photos from our events and celebrations!"
           />
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
-            {galleryImages.map((image, index) => (
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
+              {displayImages.map((image, index) => (
+                <motion.div
+                  key={image.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                  className="relative group cursor-pointer overflow-hidden rounded-xl"
+                  onClick={() => setSelectedImage(index)}
+                >
+                  <Image
+                    src={image.image_url}
+                    alt={image.title || "Gallery image"}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </motion.div>
+              ))}
+            </div>
+
+            {/* View More Button */}
+            {hasMoreImages && (
               <motion.div
-                key={image.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
-                className="relative group cursor-pointer overflow-hidden rounded-xl"
-                onClick={() => setSelectedImage(index)}
+                className="flex justify-center mt-10"
               >
-                <Image
-                  src={image.image_url}
-                  alt={image.title || "Gallery image"}
-                  fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                {image.category && (
-                  <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="px-3 py-1 bg-gold/90 text-charcoal text-xs font-medium rounded-full">
-                      {image.category}
-                    </span>
-                  </div>
-                )}
+                <Link
+                  href="/gallery"
+                  className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-gold to-copper text-charcoal font-semibold rounded-full hover:shadow-lg hover:shadow-gold/25 transition-all duration-300 hover:scale-105"
+                >
+                  <span>View More</span>
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </motion.div>
-            ))}
-          </div>
+            )}
+          </>
         )}
 
         <AnimatePresence>
-          {selectedImage !== null && galleryImages[selectedImage] && (
+          {selectedImage !== null && displayImages[selectedImage] && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -145,8 +164,8 @@ export function GallerySection() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <Image
-                  src={galleryImages[selectedImage].image_url}
-                  alt={galleryImages[selectedImage].title || "Gallery image"}
+                  src={displayImages[selectedImage].image_url}
+                  alt={displayImages[selectedImage].title || "Gallery image"}
                   fill
                   sizes="100vw"
                   className="object-contain"
