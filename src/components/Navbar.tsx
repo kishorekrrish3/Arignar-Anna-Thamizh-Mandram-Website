@@ -38,10 +38,10 @@ export function Navbar() {
           : "bg-transparent"
           }`}
       >
-        <nav className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
+        <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+          <div className="flex h-20 sm:h-24 items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <div className="relative h-14 w-14">
+              <div className="relative h-24 w-24 sm:h-20 sm:w-20 md:h-24 md:w-24">
                 <img
                   src="/logo.png"
                   alt="AATM Logo"

@@ -79,7 +79,7 @@ export function AboutSection() {
               <div className="space-y-0">
                 {timelineEvents.map((event, index) => (
                   <motion.div
-                    key={event.year}
+                    key={`${event.year}-${index}`}
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
