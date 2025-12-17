@@ -44,7 +44,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold text-charcoal mb-6 leading-[1.1]"
+          className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold text-charcoal mb-2 leading-[1.1]"
         >
           <span className="block font-heading">ARIGNAR ANNA</span>
           <span className="block font-heading text-maroon">THAMIZH MANDRAM</span>

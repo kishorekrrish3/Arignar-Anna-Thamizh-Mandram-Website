@@ -70,21 +70,13 @@ export function TeamSection() {
                 >
                   <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-4">
                     {member.image_url ? (
-                      <>
-                        <Image
-                          src={member.image_url}
-                          alt={member.name}
-                          fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                          className="object-cover transition-all duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        {member.bio && (
-                          <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <p className="text-sm text-beige/80 italic line-clamp-2">&ldquo;{member.bio}&rdquo;</p>
-                          </div>
-                        )}
-                      </>
+                      <Image
+                        src={member.image_url}
+                        alt={member.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover transition-all duration-500"
+                      />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-maroon/20 to-gold/20 flex items-center justify-center">
                         <User className="h-24 w-24 text-maroon/40" />
@@ -126,21 +118,13 @@ export function TeamSection() {
                 >
                   <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-4">
                     {member.image_url ? (
-                      <>
-                        <Image
-                          src={member.image_url}
-                          alt={member.name}
-                          fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                          className="object-cover transition-all duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        {member.bio && (
-                          <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <p className="text-sm text-beige/80 italic line-clamp-2">&ldquo;{member.bio}&rdquo;</p>
-                          </div>
-                        )}
-                      </>
+                      <Image
+                        src={member.image_url}
+                        alt={member.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover transition-all duration-500"
+                      />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-maroon/20 to-gold/20 flex items-center justify-center">
                         <User className="h-24 w-24 text-maroon/40" />
@@ -209,7 +193,9 @@ export function TeamSection() {
       >
         <p className="text-charcoal-light mb-4">Want to be part of our team?</p>
         <a
-          href="#contact"
+          href="https://chat.whatsapp.com/HMsWJFUxLJAFAOvez1lZcD"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-6 py-3 bg-maroon text-beige font-medium rounded-full hover:bg-maroon-light transition-colors"
         >
           Join the Mandram

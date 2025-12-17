@@ -104,7 +104,7 @@ export function GallerySection() {
               >
                 <Link
                   href="/gallery"
-                  className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-gold to-copper text-charcoal font-semibold rounded-full hover:shadow-lg hover:shadow-gold/25 transition-all duration-300 hover:scale-105"
+                  className="group inline-flex items-center gap-3 px-8 py-4 bg-charcoal border-2 border-gold text-gold font-semibold rounded-full hover:bg-gold hover:text-charcoal hover:shadow-lg hover:shadow-gold/25 transition-all duration-300 hover:scale-105"
                 >
                   <span>View More</span>
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />

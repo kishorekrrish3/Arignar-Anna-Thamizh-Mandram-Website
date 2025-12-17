@@ -219,11 +219,11 @@
   0% {
     transform: scale(1);
   }
-  
+
   50% {
     transform: scale(1.08);
   }
-  
+
   100% {
     transform: scale(1);
   }
@@ -236,4 +236,36 @@ html {
 ::selection {
   background-color: var(--gold);
   color: var(--charcoal);
+}
+
+/* Custom Scrollbar - Dark Theme with Gold Accent */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0C0A09;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #C4A052 0%, #B8860B 50%, #8B6914 100%);
+  border-radius: 5px;
+  border: 2px solid #0C0A09;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #D4B87A 0%, #C4A052 50%, #A67C00 100%);
+}
+
+::-webkit-scrollbar-corner {
+  background: #0C0A09;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #C4A052 #0C0A09;
 }

@@ -5,12 +5,12 @@ import { Section, SectionHeader, AnimatedCard } from "./Section";
 import { BookOpen, Users, Globe, Heart } from "lucide-react";
 
 const timelineEvents = [
-  { year: "2016", title: "Foundation", description: "AATM was established at VIT Chennai" },
-  { year: "2017", title: "First Pongal", description: "Inaugural Pongal Thiruvizha celebration" },
-  { year: "2019", title: "Growth", description: "Expanded to 500+ active members" },
-  { year: "2021", title: "Digital Era", description: "Virtual events during pandemic" },
-  { year: "2023", title: "Revival", description: "Grand return of cultural festivals" },
-  { year: "2026", title: "A Decade", description: "Celebrating 10 years of legacy" },
+  { year: "2014", title: "Foundation", description: "Arignar Anna Thamizh Mandram officially launched at VIT Chennai" },
+  { year: "2017", title: "Recognition", description: "Accorded official FFCS academic status by the university" },
+  { year: "2021", title: "Digital Wave", description: "Hosted Muthamizh Thiruvizha with 770+ online participants" },
+  { year: "2024", title: "Innovation", description: "First AI & Tamil technical collaboration with AI Club" },
+  { year: "2024", title: "Excellence", description: "Honored as 'Best Literary Club of the Year'" },
+  { year: "2025", title: "Global Stage", description: "International Pongal Thiruvizha with 30+ international delegates" },
 ];
 
 const values = [
@@ -52,21 +52,21 @@ export function AboutSection() {
           <div className="space-y-6">
             <p className="text-lg leading-relaxed text-charcoal-light">
               <span className="font-serif text-3xl text-maroon float-left mr-3 mt-1">&ldquo;</span>
-              Arignar Anna Thamizh Mandram stands as a beacon of Tamil culture at VIT Chennai. 
-              Named after the visionary leader C.N. Annadurai, our mandram embodies his ideals 
+              Arignar Anna Thamizh Mandram stands as a beacon of Tamil culture at VIT Chennai.
+              Named after the visionary leader C.N. Annadurai, our mandram embodies his ideals
               of linguistic pride and cultural preservation.
             </p>
             <p className="text-lg leading-relaxed text-charcoal-light">
-              For ten years, we have been the custodians of Tamil heritage within our campus, 
-              organizing events that range from classical literature discussions to contemporary 
-              cultural celebrations. Our flagship event, Pongal Thiruvizha, has become a hallmark 
+              For ten years, we have been the custodians of Tamil heritage within our campus,
+              organizing events that range from classical literature discussions to contemporary
+              cultural celebrations. Our flagship event, Pongal Thiruvizha, has become a hallmark
               of campus life, bringing together thousands of students in celebration of Tamil traditions.
             </p>
             <blockquote className="border-l-4 border-gold pl-6 py-2 my-8">
               <p className="font-tamil text-xl text-maroon">
-                &quot;ஒரு நாட்டின் சிறப்பு என்னவென்றால், அந்நாட்டின் மொழி சிறப்பு&quot;
+                &quot;அன்பிலார் எல்லாம் தமக்குரியர் அன்புடையார்<br />என்பும் உரியர் பிறர்க்கு.&quot;
               </p>
-              <cite className="text-sm text-charcoal-light mt-2 block">— அறிஞர் அண்ணா</cite>
+              <cite className="text-sm text-charcoal-light mt-2 block">— திருவள்ளுவர்</cite>
             </blockquote>
           </div>
         </AnimatedCard>
