@@ -294,11 +294,11 @@ export function TeamSection() {
                   </motion.div>
 
                   {isLoading ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
-                      {Array.from({ length: 10 }).map((_, i) => (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
+                      {Array.from({ length: 8 }).map((_, i) => (
                         <div
                           key={i}
-                          className="h-40 bg-beige-dark/50 rounded-xl animate-pulse"
+                          className="h-64 bg-beige-dark/50 rounded-2xl animate-pulse"
                         />
                       ))}
                     </div>
@@ -310,33 +310,33 @@ export function TeamSection() {
                       </p>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
                       {coreCommittee.map((member, index) => (
-                        <AnimatedCard key={member.id} delay={index * 0.03}>
+                        <AnimatedCard key={member.id} delay={index * 0.03} className="h-full">
                           <motion.div
                             whileHover={{ scale: 1.05, y: -5 }}
                             whileTap={{ scale: 0.98 }}
-                            className="text-center p-3 md:p-4 rounded-xl cursor-pointer bg-gradient-to-br from-white to-beige-dark/30 hover:from-beige-dark/50 hover:to-white transition-all duration-300 shadow-sm hover:shadow-lg group"
+                            className="h-full flex flex-col items-center justify-center text-center p-5 md:p-6 rounded-2xl cursor-pointer bg-gradient-to-br from-white to-beige-dark/30 hover:from-beige-dark/50 hover:to-white transition-all duration-300 shadow-sm hover:shadow-lg group"
                           >
-                            <div className="h-20 w-20 md:h-28 md:w-28 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-maroon to-maroon-light flex items-center justify-center mx-auto mb-3 overflow-hidden relative shadow-md group-hover:shadow-xl transition-shadow">
+                            <div className="h-28 w-28 md:h-36 md:w-36 lg:h-40 lg:w-40 rounded-full bg-gradient-to-br from-maroon to-maroon-light flex items-center justify-center mx-auto mb-4 overflow-hidden relative shadow-md group-hover:shadow-xl transition-shadow">
                               {member.image_url ? (
                                 <Image
                                   src={member.image_url}
                                   alt={member.name}
                                   fill
-                                  sizes="(max-width: 640px) 80px, (max-width: 1024px) 112px, 128px"
+                                  sizes="(max-width: 640px) 112px, (max-width: 1024px) 144px, 160px"
                                   className="object-cover group-hover:scale-110 transition-transform duration-500"
                                 />
                               ) : (
-                                <span className="text-beige font-serif text-xl md:text-2xl lg:text-3xl font-semibold">
+                                <span className="text-beige font-serif text-3xl md:text-4xl lg:text-5xl font-semibold">
                                   {member.name.charAt(0)}
                                 </span>
                               )}
                             </div>
-                            <h4 className="font-medium text-charcoal text-xs md:text-sm group-hover:text-maroon transition-colors line-clamp-1">
+                            <h4 className="font-medium text-charcoal text-base md:text-lg group-hover:text-maroon transition-colors break-words text-balance">
                               {member.name}
                             </h4>
-                            <p className="text-[10px] md:text-xs text-charcoal-light mt-1 line-clamp-1">
+                            <p className="text-xs md:text-sm text-charcoal-light mt-1.5 break-words text-balance">
                               {member.role}
                             </p>
                           </motion.div>
@@ -366,11 +366,11 @@ export function TeamSection() {
                 </motion.div>
 
                 {isLoading ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
-                    {Array.from({ length: 10 }).map((_, i) => (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
+                    {Array.from({ length: 8 }).map((_, i) => (
                       <div
                         key={i}
-                        className="h-40 bg-beige-dark/50 rounded-xl animate-pulse"
+                        className="h-64 bg-beige-dark/50 rounded-2xl animate-pulse"
                       />
                     ))}
                   </div>
@@ -381,68 +381,39 @@ export function TeamSection() {
                     description="Team information for this year will be updated soon!"
                   />
                 ) : (
-                  <motion.div
-                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 lg:gap-8"
-                    initial="hidden"
-                    animate="visible"
-                    variants={{
-                      hidden: { opacity: 0 },
-                      visible: {
-                        opacity: 1,
-                        transition: {
-                          staggerChildren: 0.03,
-                        },
-                      },
-                    }}
-                  >
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
                     {allMembers.map((member, index) => (
-                      <motion.div
-                        key={member.id}
-                        variants={{
-                          hidden: { opacity: 0, scale: 0.8 },
-                          visible: {
-                            opacity: 1,
-                            scale: 1,
-                            transition: {
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 30,
-                              delay: index * 0.02,
-                            },
-                          },
-                        }}
-                      >
+                      <AnimatedCard key={member.id} delay={index * 0.03} className="h-full">
                         <motion.div
                           whileHover={{ scale: 1.05, y: -5 }}
                           whileTap={{ scale: 0.98 }}
-                          className="text-center p-3 md:p-4 rounded-xl cursor-pointer bg-gradient-to-br from-white to-beige-dark/30 hover:from-beige-dark/50 hover:to-white transition-all duration-300 shadow-sm hover:shadow-lg group"
+                          className="h-full flex flex-col items-center justify-center text-center p-5 md:p-6 rounded-2xl cursor-pointer bg-gradient-to-br from-white to-beige-dark/30 hover:from-beige-dark/50 hover:to-white transition-all duration-300 shadow-sm hover:shadow-lg group"
                         >
-                          <div className="h-20 w-20 md:h-28 md:w-28 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-maroon to-maroon-light flex items-center justify-center mx-auto mb-3 overflow-hidden relative shadow-md group-hover:shadow-xl transition-shadow">
+                          <div className="h-28 w-28 md:h-36 md:w-36 lg:h-40 lg:w-40 rounded-full bg-gradient-to-br from-maroon to-maroon-light flex items-center justify-center mx-auto mb-4 overflow-hidden relative shadow-md group-hover:shadow-xl transition-shadow">
                             {member.image_url ? (
                               <Image
                                 src={member.image_url}
                                 alt={member.name}
                                 fill
-                                sizes="(max-width: 640px) 80px, (max-width: 1024px) 112px, 128px"
+                                sizes="(max-width: 640px) 112px, (max-width: 1024px) 144px, 160px"
                                 className="object-cover group-hover:scale-110 transition-transform duration-500"
                               />
                             ) : (
-                              <span className="text-beige font-serif text-xl md:text-2xl lg:text-3xl font-semibold">
+                              <span className="text-beige font-serif text-3xl md:text-4xl lg:text-5xl font-semibold">
                                 {member.name.charAt(0)}
                               </span>
                             )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-maroon/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                           </div>
-                          <h4 className="font-medium text-charcoal text-xs md:text-sm group-hover:text-maroon transition-colors line-clamp-1">
+                          <h4 className="font-medium text-charcoal text-base md:text-lg group-hover:text-maroon transition-colors break-words text-balance">
                             {member.name}
                           </h4>
-                          <p className="text-[10px] md:text-xs text-charcoal-light mt-1 line-clamp-1">
+                          <p className="text-xs md:text-sm text-charcoal-light mt-1.5 break-words text-balance">
                             {member.role}
                           </p>
                         </motion.div>
-                      </motion.div>
+                      </AnimatedCard>
                     ))}
-                  </motion.div>
+                  </div>
                 )}
               </div>
             </div>
