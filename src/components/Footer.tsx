@@ -106,6 +106,14 @@ export function Footer() {
             </div>
           </div>
         </div>
+
+        {/* Developer Credit */}
+        <div className="border-t border-beige/5 py-4">
+          <p className="text-center text-beige/30 text-xs tracking-wide">
+            Designed & Developed by{" "}
+            Marshmello
+          </p>
+        </div>
       </div>
     </footer>
   );
