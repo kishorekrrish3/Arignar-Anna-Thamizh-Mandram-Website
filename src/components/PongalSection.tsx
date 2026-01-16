@@ -160,16 +160,16 @@ export function PongalSection() {
               <div className="relative rounded-2xl overflow-hidden bg-charcoal/30 shadow-2xl p-4">
                 {isLoading ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                    {[...Array(FRONT_GRID_COUNT)].map((_, index) => (
-                      <div
-                        key={index}
-                        className={`relative bg-beige/10 rounded-xl animate-pulse ${index === 0 ? 'md:col-span-2 md:row-span-2' : ''
-                          }`}
-                        style={{
-                          aspectRatio: index === 0 ? '16/10' : '4/3',
-                        }}
-                      />
-                    ))}
+                    {[...Array(FRONT_GRID_COUNT)].map((_, index) => {
+                      const bentoClasses = getBentoClasses(index);
+                      return (
+                        <div
+                          key={index}
+                          className={`relative bg-beige/10 rounded-xl animate-pulse ${bentoClasses.colSpan}`}
+                          style={{ aspectRatio: bentoClasses.aspectRatio }}
+                        />
+                      );
+                    })}
                   </div>
                 ) : pongalImages.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-96 gap-4 bg-gradient-to-br from-maroon/40 to-gold/20 rounded-xl">
@@ -180,8 +180,8 @@ export function PongalSection() {
                   <motion.div
                     layout
                     className={`grid gap-3 md:gap-4 ${isExpanded
-                        ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4' // Uniform grid when expanded
-                        : 'grid-cols-2 md:grid-cols-3' // Bento grid when collapsed
+                      ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4' // Uniform grid when expanded
+                      : 'grid-cols-2 md:grid-cols-3' // Bento grid when collapsed
                       }`}
                   >
                     <AnimatePresence mode="popLayout">
