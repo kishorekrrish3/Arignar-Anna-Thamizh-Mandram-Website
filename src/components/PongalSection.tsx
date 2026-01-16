@@ -16,7 +16,31 @@ const highlights = [
 ];
 
 // Number of images to show in the front grid (collapsed)
-const FRONT_GRID_COUNT = 6;
+// Layout: Hero (3 cols) + 2+1 + 1+1+1 + 2+1 = 8 images total
+const FRONT_GRID_COUNT = 8;
+
+// Get bento grid classes based on index for collapsed view
+// Pattern: Row 1: full width hero | Row 2: 2+1 | Row 3: 1+1+1 | Row 4: 2+1
+const getBentoClasses = (index: number): { colSpan: string; aspectRatio: string } => {
+  switch (index) {
+    case 0: // Hero - full width
+      return { colSpan: 'col-span-2 md:col-span-3', aspectRatio: '21/9' };
+    case 1: // Row 2 - large
+      return { colSpan: 'md:col-span-2', aspectRatio: '16/9' };
+    case 2: // Row 2 - small
+      return { colSpan: 'col-span-1', aspectRatio: '3/4' };
+    case 3: // Row 3 - equal
+    case 4:
+    case 5:
+      return { colSpan: 'col-span-1', aspectRatio: '4/3' };
+    case 6: // Row 4 - large
+      return { colSpan: 'md:col-span-2', aspectRatio: '16/9' };
+    case 7: // Row 4 - small
+      return { colSpan: 'col-span-1', aspectRatio: '3/4' };
+    default:
+      return { colSpan: 'col-span-1', aspectRatio: '4/3' };
+  }
+};
 
 export function PongalSection() {
   const [pongalImages, setPongalImages] = useState<GalleryImage[]>([]);
@@ -157,13 +181,13 @@ export function PongalSection() {
                     layout
                     className={`grid gap-3 md:gap-4 ${isExpanded
                         ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4' // Uniform grid when expanded
-                        : 'grid-cols-2 md:grid-cols-3 auto-rows-auto' // Bento grid when collapsed
+                        : 'grid-cols-2 md:grid-cols-3' // Bento grid when collapsed
                       }`}
                   >
                     <AnimatePresence mode="popLayout">
                       {displayImages.map((image, index) => {
-                        // Hero image only when collapsed and it's the first image
-                        const isHeroImage = index === 0 && !isExpanded;
+                        // Get bento layout classes for collapsed view
+                        const bentoClasses = !isExpanded ? getBentoClasses(index) : null;
                         // Find the actual index in the full array for lightbox
                         const fullIndex = isExpanded ? index : pongalImages.findIndex(img => img.id === image.id);
 
@@ -175,10 +199,10 @@ export function PongalSection() {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.3) }}
-                            className={`relative group cursor-pointer overflow-hidden rounded-xl ${isHeroImage ? 'md:col-span-2 md:row-span-2' : ''
+                            className={`relative group cursor-pointer overflow-hidden rounded-xl ${bentoClasses ? bentoClasses.colSpan : ''
                               }`}
                             style={{
-                              aspectRatio: isHeroImage ? '16/10' : '4/3',
+                              aspectRatio: bentoClasses ? bentoClasses.aspectRatio : '4/3',
                             }}
                             onClick={() => setSelectedImage(fullIndex)}
                           >
@@ -186,13 +210,13 @@ export function PongalSection() {
                               src={image.image_url}
                               alt={image.title || "Pongal Celebration"}
                               fill
-                              sizes={isHeroImage ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 50vw, 33vw"}
+                              sizes={index === 0 && !isExpanded ? "100vw" : "(max-width: 768px) 50vw, 33vw"}
                               className="object-cover transition-transform duration-500 group-hover:scale-110"
                               priority={index < 3}
                             />
 
                             {/* Shine effect on hover */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
 
                             {/* Border glow on hover */}
                             <div className="absolute inset-0 rounded-xl ring-2 ring-gold/0 group-hover:ring-gold/50 transition-all duration-300" />
