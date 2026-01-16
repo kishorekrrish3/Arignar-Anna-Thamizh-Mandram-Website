@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedCard } from "./Section";
-import { Music, Users, Utensils, Star, Sparkles, ImageIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { Music, Users, Utensils, Star, Sparkles, ImageIcon, X, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { getPongalGalleryImages } from "@/lib/api/gallery";
 import type { GalleryImage } from "@/lib/supabase";
@@ -15,10 +15,14 @@ const highlights = [
   { icon: Users, label: "Massive Audience", description: "5000+ attendees" },
 ];
 
+// Number of images to show in the front grid (collapsed)
+const FRONT_GRID_COUNT = 6;
+
 export function PongalSection() {
   const [pongalImages, setPongalImages] = useState<GalleryImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Fetch images from Supabase
   useEffect(() => {
@@ -37,39 +41,50 @@ export function PongalSection() {
     fetchPongalImages();
   }, []);
 
-  // Auto-advance slides every 5 seconds
+  // Determine which images to display
+  const displayImages = isExpanded ? pongalImages : pongalImages.slice(0, FRONT_GRID_COUNT);
+  const hasMoreImages = pongalImages.length > FRONT_GRID_COUNT;
+  const remainingCount = pongalImages.length - FRONT_GRID_COUNT;
+
+  // Lightbox navigation
+  const handlePrev = () => {
+    if (selectedImage !== null) {
+      setSelectedImage(selectedImage === 0 ? pongalImages.length - 1 : selectedImage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (selectedImage !== null) {
+      setSelectedImage(selectedImage === pongalImages.length - 1 ? 0 : selectedImage + 1);
+    }
+  };
+
+  // Keyboard navigation for lightbox
   useEffect(() => {
-    if (pongalImages.length <= 1) return;
-
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % pongalImages.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [pongalImages.length]);
-
-  const goToPrevious = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + pongalImages.length) % pongalImages.length);
-  }, [pongalImages.length]);
-
-  const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % pongalImages.length);
-  }, [pongalImages.length]);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedImage === null) return;
+      if (e.key === "ArrowLeft") handlePrev();
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "Escape") setSelectedImage(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedImage, pongalImages.length]);
 
   return (
     <section id="pongal" className="relative overflow-hidden">
       <div className="relative min-h-screen bg-gradient-to-br from-maroon via-maroon-light to-maroon py-20 lg:py-32">
         {/* Background Pattern */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-full opacity-10">
-            <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <pattern id="pongal-pattern" width="10" height="10" patternUnits="userSpaceOnUse">
-                <circle cx="5" cy="5" r="1" fill="currentColor" className="text-gold" />
-              </pattern>
-              <rect width="100%" height="100%" fill="url(#pongal-pattern)" />
-            </svg>
-          </div>
-        </div>
+        {/* Background Pattern */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23C4A052'/%3E%3C/svg%3E")`,
+            backgroundSize: '20px 20px',
+            backgroundRepeat: 'repeat'
+          }}
+        />
 
         <div className="absolute top-20 right-20 w-64 h-64 bg-gold/20 rounded-full blur-3xl" />
         <div className="absolute bottom-20 left-20 w-48 h-48 bg-gold/10 rounded-full blur-2xl" />
@@ -99,9 +114,9 @@ export function PongalSection() {
             </p>
           </motion.div>
 
-          {/* Central Gallery Showcase */}
-          <AnimatedCard className="mb-16">
-            <div className="relative w-full max-w-5xl mx-auto" style={{ aspectRatio: '16/9' }}>
+          {/* Modern Grid Gallery */}
+          <AnimatedCard className="mb-8">
+            <div className="relative">
               {/* Decorative Frame */}
               <div className="absolute -inset-3 rounded-3xl border-2 border-gold/20 pointer-events-none" />
               <div className="absolute -inset-6 rounded-3xl border border-gold/10 pointer-events-none" />
@@ -109,93 +124,100 @@ export function PongalSection() {
               {/* Glow Effect */}
               <div className="absolute -inset-8 bg-gold/15 blur-3xl rounded-3xl -z-10" />
 
-              {/* Carousel Container */}
-              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-charcoal/30 shadow-2xl">
+              {/* Grid Container */}
+              <div className="relative rounded-2xl overflow-hidden bg-charcoal/30 shadow-2xl p-4">
                 {isLoading ? (
-                  <div className="absolute inset-0 flex items-center justify-center bg-beige/10">
-                    <div className="animate-pulse text-beige/60 text-lg">Loading memories...</div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                    {[...Array(FRONT_GRID_COUNT)].map((_, index) => (
+                      <div
+                        key={index}
+                        className={`relative bg-beige/10 rounded-xl animate-pulse ${index === 0 ? 'md:col-span-2 md:row-span-2' : ''
+                          }`}
+                        style={{
+                          aspectRatio: index === 0 ? '16/10' : '4/3',
+                        }}
+                      />
+                    ))}
                   </div>
                 ) : pongalImages.length === 0 ? (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-maroon/40 to-gold/20">
+                  <div className="flex flex-col items-center justify-center h-96 gap-4 bg-gradient-to-br from-maroon/40 to-gold/20 rounded-xl">
                     <ImageIcon className="h-16 w-16 text-beige/40" />
                     <p className="text-beige/60 text-center px-4">Celebration memories coming soon</p>
                   </div>
                 ) : (
-                  <>
-                    {/* Images */}
-                    {pongalImages.map((image, index) => (
-                      <div
-                        key={image.id}
-                        className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                          }`}
-                      >
-                        <Image
-                          src={image.image_url}
-                          alt={image.title || "Pongal Celebration"}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 80vw"
-                          className="object-cover"
-                          style={{
-                            animation: index === currentIndex ? 'kenburns 8s ease-out forwards' : 'none'
-                          }}
-                          priority={index === 0}
-                        />
-                        {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-maroon/80 via-transparent to-maroon/20" />
+                  <motion.div
+                    layout
+                    className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4"
+                  >
+                    <AnimatePresence mode="popLayout">
+                      {displayImages.map((image, index) => {
+                        // For the first 6 images, use special layout
+                        const isFirstImage = index === 0 && !isExpanded;
+                        // Find the actual index in the full array for lightbox
+                        const fullIndex = isExpanded ? index : pongalImages.findIndex(img => img.id === image.id);
 
-                        {/* Image Title */}
-                        {image.title && (
-                          <div className="absolute bottom-8 left-8 right-8">
-                            <p className="text-beige font-serif text-xl md:text-2xl font-semibold drop-shadow-lg">
-                              {image.title}
-                            </p>
-                            {image.description && (
-                              <p className="text-beige/80 text-sm mt-2 drop-shadow-md">{image.description}</p>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-
-                    {/* Navigation Buttons */}
-                    {pongalImages.length > 1 && (
-                      <>
-                        <button
-                          onClick={goToPrevious}
-                          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-beige/20 border border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm transition-all hover:scale-105"
-                          aria-label="Previous image"
-                        >
-                          <ChevronLeft className="h-6 w-6" />
-                        </button>
-                        <button
-                          onClick={goToNext}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-beige/20 border border-beige/30 text-beige hover:bg-beige/30 backdrop-blur-sm transition-all hover:scale-105"
-                          aria-label="Next image"
-                        >
-                          <ChevronRight className="h-6 w-6" />
-                        </button>
-
-                        {/* Dots Indicator */}
-                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-                          {pongalImages.map((_, index) => (
-                            <button
-                              key={index}
-                              onClick={() => setCurrentIndex(index)}
-                              className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex
-                                ? 'bg-gold w-8'
-                                : 'bg-beige/40 hover:bg-beige/60'
-                                }`}
-                              aria-label={`Go to slide ${index + 1}`}
+                        return (
+                          <motion.div
+                            key={image.id}
+                            layout
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.3) }}
+                            className={`relative group cursor-pointer overflow-hidden rounded-xl ${isFirstImage ? 'md:col-span-2 md:row-span-2' : ''
+                              }`}
+                            style={{
+                              aspectRatio: isFirstImage ? '16/10' : '4/3',
+                            }}
+                            onClick={() => setSelectedImage(fullIndex)}
+                          >
+                            <Image
+                              src={image.image_url}
+                              alt={image.title || "Pongal Celebration"}
+                              fill
+                              sizes={isFirstImage ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 50vw, 33vw"}
+                              className="object-cover transition-transform duration-500 group-hover:scale-110"
+                              priority={index < 3}
                             />
-                          ))}
-                        </div>
-                      </>
-                    )}
-                  </>
+
+                            {/* Shine effect on hover */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+
+                            {/* Border glow on hover */}
+                            <div className="absolute inset-0 rounded-xl ring-2 ring-gold/0 group-hover:ring-gold/50 transition-all duration-300" />
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
+                  </motion.div>
                 )}
               </div>
             </div>
           </AnimatedCard>
+
+          {/* View More / Show Less Button */}
+          {hasMoreImages && !isLoading && pongalImages.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex justify-center mb-16"
+            >
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="group inline-flex items-center gap-3 px-8 py-4 bg-charcoal/50 border-2 border-gold text-gold font-semibold rounded-full hover:bg-gold hover:text-charcoal hover:shadow-lg hover:shadow-gold/25 transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+              >
+                <span>
+                  {isExpanded ? 'Show Less' : `View More`}
+                  {!isExpanded && remainingCount > 0 && (
+                    <span className="ml-2 opacity-70">+{remainingCount} photos</span>
+                  )}
+                </span>
+                <ArrowRight className={`h-5 w-5 transition-transform group-hover:translate-x-1 ${isExpanded ? 'rotate-90' : ''}`} />
+              </button>
+            </motion.div>
+          )}
 
           {/* Highlights - Memory Blocks */}
           <motion.div
@@ -250,6 +272,91 @@ export function PongalSection() {
           </motion.div>
         </div>
       </div>
+
+      {/* Lightbox - Same pattern as GallerySection */}
+      <AnimatePresence>
+        {selectedImage !== null && pongalImages[selectedImage] && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal/95 backdrop-blur-sm"
+            onClick={() => setSelectedImage(null)}
+          >
+            {/* Close Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage(null);
+              }}
+              className="absolute top-6 right-6 p-2 text-beige hover:text-gold transition-colors"
+              aria-label="Close"
+            >
+              <X className="h-8 w-8" />
+            </button>
+
+            {/* Previous Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePrev();
+              }}
+              className="absolute left-6 p-2 text-beige hover:text-gold transition-colors"
+              aria-label="Previous"
+            >
+              <ChevronLeft className="h-8 w-8" />
+            </button>
+
+            {/* Next Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNext();
+              }}
+              className="absolute right-6 p-2 text-beige hover:text-gold transition-colors"
+              aria-label="Next"
+            >
+              <ChevronRight className="h-8 w-8" />
+            </button>
+
+            {/* Image Container */}
+            <motion.div
+              key={pongalImages[selectedImage].id}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative w-full max-w-5xl mx-6"
+              style={{ aspectRatio: '16/10' }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={pongalImages[selectedImage].image_url}
+                alt={pongalImages[selectedImage].title || "Pongal Celebration"}
+                fill
+                sizes="100vw"
+                className="object-contain"
+              />
+
+              {/* Image Info */}
+              {(pongalImages[selectedImage].title || pongalImages[selectedImage].description) && (
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-charcoal/90 to-transparent">
+                  {pongalImages[selectedImage].title && (
+                    <p className="text-beige font-serif font-semibold text-lg">{pongalImages[selectedImage].title}</p>
+                  )}
+                  {pongalImages[selectedImage].description && (
+                    <p className="text-beige/70 text-sm mt-1">{pongalImages[selectedImage].description}</p>
+                  )}
+                </div>
+              )}
+            </motion.div>
+
+            {/* Image Counter */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 bg-charcoal/70 rounded-full text-beige/80 text-sm backdrop-blur-sm">
+              {selectedImage + 1} / {pongalImages.length}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
