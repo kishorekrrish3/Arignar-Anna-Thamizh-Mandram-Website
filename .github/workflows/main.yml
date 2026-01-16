@@ -1,15 +1,15 @@
-name: Supabase Keep Alive
+name: Supabase Keepalive Cron
 
 on:
   schedule:
-    - cron: "0 0 */3 * *"
-  workflow_dispatch:
+    - cron: "0 0 */3 * *"   # Runs every 3 days
+  workflow_dispatch:        # Allows manual run
 
 jobs:
-  ping:
+  keepalive:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Call keepalive API
+      - name: Call Supabase Keepalive API
         run: |
           curl -X GET https://arignar-anna-thamizh-mandram.vercel.app/api/keepalive
