@@ -19,26 +19,27 @@ const highlights = [
 // Layout: Hero (3 cols) + 2+1 + 1+1+1 + 2+1 = 8 images total
 const FRONT_GRID_COUNT = 8;
 
-// Get bento grid classes based on index for collapsed view
+// Get bento grid classes based on index for collapsed view (md+ screens only)
 // Pattern: Row 1: full width hero | Row 2: 2+1 | Row 3: 1+1+1 | Row 4: 2+1
-const getBentoClasses = (index: number): { colSpan: string; aspectRatio: string } => {
+// On mobile: simple uniform grid (no bento spans)
+const getBentoClasses = (index: number): { colSpan: string; mobileAspectRatio: string; desktopAspectRatio: string } => {
   switch (index) {
-    case 0: // Hero - full width
-      return { colSpan: 'col-span-2 md:col-span-3', aspectRatio: '21/9' };
-    case 1: // Row 2 - large
-      return { colSpan: 'md:col-span-2', aspectRatio: '16/9' };
+    case 0: // Hero - full width (only on md+)
+      return { colSpan: 'md:col-span-3', mobileAspectRatio: '4/3', desktopAspectRatio: '21/9' };
+    case 1: // Row 2 - large (only on md+)
+      return { colSpan: 'md:col-span-2', mobileAspectRatio: '4/3', desktopAspectRatio: '16/9' };
     case 2: // Row 2 - small
-      return { colSpan: 'col-span-1', aspectRatio: '3/4' };
+      return { colSpan: '', mobileAspectRatio: '4/3', desktopAspectRatio: '3/4' };
     case 3: // Row 3 - equal
     case 4:
     case 5:
-      return { colSpan: 'col-span-1', aspectRatio: '4/3' };
-    case 6: // Row 4 - large
-      return { colSpan: 'md:col-span-2', aspectRatio: '16/9' };
+      return { colSpan: '', mobileAspectRatio: '4/3', desktopAspectRatio: '4/3' };
+    case 6: // Row 4 - large (only on md+)
+      return { colSpan: 'md:col-span-2', mobileAspectRatio: '4/3', desktopAspectRatio: '16/9' };
     case 7: // Row 4 - small
-      return { colSpan: 'col-span-1', aspectRatio: '3/4' };
+      return { colSpan: '', mobileAspectRatio: '4/3', desktopAspectRatio: '3/4' };
     default:
-      return { colSpan: 'col-span-1', aspectRatio: '4/3' };
+      return { colSpan: '', mobileAspectRatio: '4/3', desktopAspectRatio: '4/3' };
   }
 };
 
@@ -166,7 +167,7 @@ export function PongalSection() {
                         <div
                           key={index}
                           className={`relative bg-beige/10 rounded-xl animate-pulse ${bentoClasses.colSpan}`}
-                          style={{ aspectRatio: bentoClasses.aspectRatio }}
+                          style={{ aspectRatio: bentoClasses.mobileAspectRatio }}
                         />
                       );
                     })}
@@ -199,18 +200,19 @@ export function PongalSection() {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.3) }}
-                            className={`relative group cursor-pointer overflow-hidden rounded-xl ${bentoClasses ? bentoClasses.colSpan : ''
-                              }`}
+                            className={`relative group cursor-pointer overflow-hidden rounded-xl pongal-gallery-item ${bentoClasses ? bentoClasses.colSpan : ''}`}
                             style={{
-                              aspectRatio: bentoClasses ? bentoClasses.aspectRatio : '4/3',
-                            }}
+                              // CSS custom properties for responsive aspect ratios
+                              '--mobile-aspect-ratio': bentoClasses ? bentoClasses.mobileAspectRatio : '4/3',
+                              '--desktop-aspect-ratio': bentoClasses ? bentoClasses.desktopAspectRatio : '4/3',
+                            } as React.CSSProperties}
                             onClick={() => setSelectedImage(fullIndex)}
                           >
                             <Image
                               src={image.image_url}
                               alt={image.title || "Pongal Celebration"}
                               fill
-                              sizes={index === 0 && !isExpanded ? "100vw" : "(max-width: 768px) 50vw, 33vw"}
+                              sizes={index === 0 && !isExpanded ? "(max-width: 768px) 100vw, 100vw" : "(max-width: 768px) 50vw, 33vw"}
                               className="object-cover transition-transform duration-500 group-hover:scale-110"
                               priority={index < 3}
                             />
