@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <h1>Arignar Anna Thamizh Mandram — Website</h1>
+  <p><strong>A digital home for Tamil language, literature, culture, and campus community.</strong></p>
+  <p>Showcases the mandram, events, team, gallery, literary features, achievements, and contact information.</p>
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-15-black?logo=next.js" alt="Next.js">
+    <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black" alt="React">
+    <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
+    <img src="https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
+  </p>
+</div>
 
-## Getting Started
+---
 
-First, run the development server:
+This website presents Arignar Anna Thamizh Mandram's activities and identity at VIT Chennai. It brings together information about the organization, events, team, gallery, literary content, achievements, and ways to get in touch.
+
+## Website sections
+
+- **About the mandram** — mission and community identity
+- **Events and cultural programming**
+- **Pongal feature**
+- **Team and member information**
+- **Gallery**
+- **Kanaiyazhi literary section**
+- **Achievements**
+- **Contact**
+
+## Tech stack
+
+- Next.js App Router
+- React and TypeScript
+- Tailwind CSS and component-based UI
+- Supabase integration, as configured by the application
+
+## Run locally
+
+### Requirements
+
+- Node.js compatible with the version in `package.json`
+- npm
+
+```bash
+git clone https://github.com/kishorekrrish3/Arignar-Anna-Thamizh-Mandram-Website.git
+cd Arignar-Anna-Thamizh-Mandram-Website
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Available scripts
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm run start
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Content and deployment notes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Review event dates, member information, photographs, and contact details before publishing updates. Keep any Supabase credentials in environment variables and configure access policies before using real user data.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Contributing
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Content corrections, accessibility improvements, and focused bug fixes are welcome. Please respect the organization’s identity and obtain permission before publishing personal information or photographs.
